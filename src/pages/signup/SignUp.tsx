@@ -1,6 +1,5 @@
-import MultiStepSignup from '../../features/signup'
+import MultiStepSignup from "../../components/signup/MultiStepSignup";
 
 export default function SignUp() {
-  return <MultiStepSignup/>
+  return <MultiStepSignup />;
 }
-

@@ -1,6 +1,6 @@
-import { Truck, Clock, DollarSign } from 'lucide-react';
+import { Truck, Clock, IndianRupee } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import photo from "../../../public/placeholder.jpeg";
+import photo from "../../assets/placeholder.jpeg";
 
 const DeliveryHero = () => {
   return (
@@ -40,7 +40,7 @@ const DeliveryHero = () => {
                 <p>Flexible Hours</p>
               </div>
               <div className="flex flex-col items-center text-center">
-                <DollarSign className="h-8 w-8 text-orange-500 mb-2" />
+                <IndianRupee className="h-8 w-8 text-orange-500 mb-2" />
                 <p>Weekly Payouts</p>
               </div>
             </div>
