@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
-import image1 from "../../../public/placeholder1.jpeg"
-import image2 from "../../../public/placeholder2.jpeg"
-import image3 from "../../../public/placeholder3.jpeg"
+import image1 from "../../assets/placeholder1.jpeg"
+import image2 from "../../assets/placeholder2.jpeg"
+import image3 from "../../assets/placeholder3.jpeg"
 
 const DeliveryTestimonials = () => {
   const testimonials = [

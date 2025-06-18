@@ -1,42 +1,49 @@
-// src/features/signup/signupSlice.ts
+
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export type VehicleType = 'Scooter' | 'Bike' | 'Bicycle';
+interface PersonalInfo {
+  name: string;
+  email: string;
+  mobile: string; 
+  dob: string;
+  password: string;
+  confirmPassword: string;
+  permanentAddress: string;
+  pincode: string;
+  state: string;
+}
+
+
+interface VehicleDetails {
+  vehicleType: string;
+  vehicleColor?: string;
+  vehicleNumber?: string;
+}
+
+interface Documents {
+  aadhaar: string;
+  dl?: string;
+  rc?: string;
+  profilePic?: string;
+}
 
 interface SignupState {
   step: number;
-  mobile: string;
+  email: string;
   otpVerified: boolean;
-  personalInfo: {
-    name: string;
-    email: string;
-    dob: string;
-    password: string;
-    confirmPassword: string;
-    permanentAddress: string;
-    pincode: string;
-    state: string;
-  };
-  vehicleDetails: {
-    vehicleType: VehicleType;
-    vehicleNumber: string | undefined;
-    vehicleColor: string |undefined;
-  };
-  documents: {
-    profilePic: string;
-    rc: string | undefined;
-    aadhaar: string;
-    dl: string | undefined;
-  };
+  personalInfo: PersonalInfo;
+  vehicleDetails: VehicleDetails;
+  documents: Documents;
 }
 
 const initialState: SignupState = {
   step: 1,
-  mobile: '',
+  email: '',
   otpVerified: false,
   personalInfo: {
     name: '',
     email: '',
+    mobile: '', // Added mobile field
     dob: '',
     password: '',
     confirmPassword: '',
@@ -45,15 +52,15 @@ const initialState: SignupState = {
     state: '',
   },
   vehicleDetails: {
-    vehicleType: 'Scooter',
-    vehicleNumber: '',
+    vehicleType: '',
     vehicleColor: '',
+    vehicleNumber: '',
   },
   documents: {
-    profilePic: '',
-    rc: '',
     aadhaar: '',
     dl: '',
+    rc: '',
+    profilePic: '',
   },
 };
 
@@ -61,27 +68,39 @@ const signupSlice = createSlice({
   name: 'signup',
   initialState,
   reducers: {
-    nextStep: (state) => { state.step += 1; },
-    prevStep: (state) => { state.step -= 1; },
-    setMobile: (state, action: PayloadAction<string>) => { state.mobile = action.payload; },
-    setOtpVerified: (state, action: PayloadAction<boolean>) => { state.otpVerified = action.payload; },
-    updatePersonalInfo: (state, action: PayloadAction<SignupState['personalInfo']>) => {
-      state.personalInfo = { ...state.personalInfo, ...action.payload };
+    setEmail: (state, action: PayloadAction<string>) => {
+      state.email = action.payload;
     },
-    updateVehicleDetails: (state, action: PayloadAction<SignupState['vehicleDetails']>) => {
-      state.vehicleDetails = { ...state.vehicleDetails, ...action.payload };
+    nextStep: (state) => {
+      state.step += 1;
     },
-    updateDocuments: (state, action: PayloadAction<SignupState['documents']>) => {
-      state.documents = { ...state.documents, ...action.payload };
+    prevStep: (state) => {
+      if (state.step > 1) {
+        state.step -= 1;
+      }
     },
-    resetSignup: () => initialState,
+    setOtpVerified: (state, action: PayloadAction<boolean>) => {
+      state.otpVerified = action.payload;
+    },
+    updatePersonalInfo: (state, action: PayloadAction<PersonalInfo>) => {
+      state.personalInfo = action.payload;
+    },
+    updateVehicleDetails: (state, action: PayloadAction<VehicleDetails>) => {
+      state.vehicleDetails = action.payload;
+    },
+    updateDocuments: (state, action: PayloadAction<Documents>) => {
+      state.documents = action.payload;
+    },
+    resetSignup: () => {
+      return initialState;
+    },
   },
 });
 
 export const {
+  setEmail,
   nextStep,
   prevStep,
-  setMobile,
   setOtpVerified,
   updatePersonalInfo,
   updateVehicleDetails,

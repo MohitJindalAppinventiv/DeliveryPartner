@@ -8,6 +8,7 @@ interface PublicRouteProps{
 }
 function PublicRoute({children}:PublicRouteProps) {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  // const isAuthenticated=false
 
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>;
 }

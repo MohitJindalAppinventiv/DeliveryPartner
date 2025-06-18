@@ -33,15 +33,16 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/loginUser", async (data, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/api/login", data, {
+    const response = await axiosInstance.post("/auth/deliveryPartner/login", data, {
       headers: { "Content-Type": "application/json" },
     });
 
-    const { token } = response.data;
+    const { accessToken } = response.data;
+    console.log(accessToken)
 
 
-    saveAuthToken(token);
-    return token;
+    saveAuthToken(accessToken);
+    return accessToken;
   } catch (error: any) {
     return rejectWithValue(
       error?.response?.data?.message || "Something went wrong"
@@ -54,11 +55,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      console.log("logout")
       state.token = null;
       state.isAuthenticated = false;
       state.status = "idle";
       state.error = null;
       removeAuthToken();
+      
     },
     setCredentials: (state, action: PayloadAction<string>) => {
       state.token = action.payload;

@@ -4,14 +4,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-// import { loginUser } from "../../store/authSlice"; // Import the loginUser thunk
+import { loginUser } from "../../store/authSlice"; // Import the loginUser thunk
 import { loginschema, type LoginFormData } from "../../validations/loginValidation"; // Assuming you have the zod schema defined elsewhere
 import type { RootState } from "../../store/store";
-// import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { useAppDispatch } from "../../hooks/useAppDispatch";
+import { ArrowLeft } from "lucide-react";
 
 const Login: React.FC = () => {
   const [error, setError] = useState<string>("");
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,31 +31,38 @@ const Login: React.FC = () => {
     setError(""); // Clear previous error message
 
     // Dispatch the loginUser thunk
-    // try {
-    //     // Dispatch the loginUser async thunk and use .unwrap() to handle success/failure
-    //     await dispatch(loginUser(data)).unwrap();
-    //     navigate(from, { replace: true }); // Navigate after successful login
-    //   } catch (err: any) {
-    //     setError(err); // Show the error message if login fails
-    //   }
+    try {
+        // Dispatch the loginUser async thunk and use .unwrap() to handle success/failure
+        await dispatch(loginUser(data)).unwrap();
+        navigate(from, { replace: true }); // Navigate after successful login
+      } catch (err: any) {
+        setError(err); // Show the error message if login fails
+      }
 
-    if (
-      data.email === "admin@example.com" &&
-      data.password === "admin123"
-    ) {
-      // Simulate delay
-      await new Promise((res) => setTimeout(res, 500));
-      // Store a dummy token in localStorage for testing (optional)
-      localStorage.setItem("token", "dummy_token");
-      navigate(from, { replace: true });
-    } else {
-      setError("Invalid email or password");
-    }
+    // if (
+    //   data.email === "admin@example.com" &&
+    //   data.password === "admin123"
+    // ) {
+    //   // Simulate delay
+    //   await new Promise((res) => setTimeout(res, 500));
+    //   // Store a dummy token in localStorage for testing (optional)
+    //   localStorage.setItem("token", "dummy_token");
+    //   navigate(from, { replace: true });
+    // } else {
+    //   setError("Invalid email or password");
+    // }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 font-sans">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-2xl">
+                <Link 
+          to="/" 
+          className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 hover:text-orange-500 transition-colors group"
+        >
+          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-sm font-medium">Back to Home</span>
+        </Link>
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
           <p className="mt-2 text-gray-600">Sign in to your account</p>
@@ -122,7 +130,7 @@ const Login: React.FC = () => {
 
         <div className="text-center text-sm text-gray-500">
           Don't have an account?{' '}
-          <Link to="signup" className="font-medium text-orange-500 hover:text-orange-600">
+          <Link to="/signup" className="font-medium text-orange-500 hover:text-orange-600">
             Sign up
           </Link>
         </div>
