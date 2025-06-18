@@ -1,4 +1,3 @@
-
 // import React, { useState } from 'react';
 // import { Bell, MapPin, Clock, Star, TrendingUp, Package, Phone, Navigation, LogOut, User } from 'lucide-react';
 
@@ -67,7 +66,7 @@
 //                 <p className="text-red-100 text-sm">Foodify Dashboard</p>
 //               </div>
 //             </div>
-            
+
 //             <div className="flex items-center gap-4">
 //               {/* Online/Offline Toggle */}
 //               <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
@@ -83,7 +82,7 @@
 //                   <div className="w-11 h-6 bg-white/20 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
 //                 </label>
 //               </div>
-              
+
 //               {/* Notifications */}
 //               <button className="text-white hover:bg-white/10 relative rounded-full p-2">
 //                 <Bell className="w-5 h-5" />
@@ -92,7 +91,7 @@
 
 //               {/* Profile Dropdown */}
 //               <div className="relative">
-//                 <button 
+//                 <button
 //                   className="flex items-center gap-2 text-white hover:bg-white/10 px-3 py-2 rounded-md"
 //                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
 //                 >
@@ -123,7 +122,7 @@
 //                         <span>Delivery History</span>
 //                       </button>
 //                       <div className="border-t border-gray-200 my-1"></div>
-//                       <button 
+//                       <button
 //                         className="w-full text-left px-2 py-2 text-sm text-red-600 hover:bg-gray-100 rounded flex items-center"
 //                         onClick={handleLogout}
 //                       >
@@ -304,7 +303,7 @@
 //                             <Phone className="w-4 h-4" />
 //                             Call
 //                           </button>
-//                           <button 
+//                           <button
 //                             className={`px-3 py-1.5 text-sm text-white rounded-md ${order.status === 'pickup_ready' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}
 //                           >
 //                             {order.status === 'pickup_ready' ? 'Start Delivery' : 'Track Order'}
@@ -333,7 +332,7 @@
 //                           <span className="text-sm font-medium">{day}</span>
 //                           <div className="flex items-center gap-2">
 //                             <div className="w-32 bg-gray-200 rounded-full h-2">
-//                               <div 
+//                               <div
 //                                 className="bg-green-500 h-2 rounded-full transition-all"
 //                                 style={{ width: `${(weeklyEarnings[index] / Math.max(...weeklyEarnings)) * 100}%` }}
 //                               ></div>
@@ -428,7 +427,7 @@
 //                       <p className="text-3xl font-bold text-green-600">67%</p>
 //                       <p className="text-sm text-gray-600">Monthly Target Completed</p>
 //                     </div>
-                    
+
 //                     <div className="space-y-3">
 //                       <div className="flex justify-between text-sm">
 //                         <span>Deliveries: 201/300</span>
@@ -437,7 +436,7 @@
 //                       <div className="w-full bg-gray-200 rounded-full h-2">
 //                         <div className="bg-blue-500 h-2 rounded-full" style={{ width: '67%' }}></div>
 //                       </div>
-                      
+
 //                       <div className="flex justify-between text-sm">
 //                         <span>Earnings: ₹15,400/₹25,000</span>
 //                         <span>62%</span>
@@ -459,40 +458,48 @@
 
 // export default DeliveryDashboard;
 
-
-
-import React, { useState } from 'react';
-import { MapPin, Clock, Star, TrendingUp, Package, Phone, Navigation, LogOut, User } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  MapPin,
+  Clock,
+  Star,
+  TrendingUp,
+  Package,
+  Phone,
+  Navigation,
+  LogOut,
+  User,
+} from "lucide-react";
 
 const DeliveryDashboard: React.FC = () => {
   const [isOnline, setIsOnline] = useState(true);
   const [activeOrders] = useState([
     {
-      id: '#ZOM001',
-      restaurant: 'Burger King',
-      restaurantAddress: 'Connaught Place, New Delhi',
-      customer: 'Rahul Sharma',
-      customerAddress: 'A-203, Rajeev Chowk, New Delhi',
-      phone: '+91 98765 43210',
-      amount: '₹320',
-      distance: '2.3 km',
-      eta: '15 mins',
-      status: 'pickup_ready',
-      priority: 'high'
+      id: "#ZOM001",
+      restaurant: "Burger King",
+      restaurantAddress: "Connaught Place, New Delhi",
+      customer: "Rahul Sharma",
+      customerAddress: "A-203, Rajeev Chowk, New Delhi",
+      phone: "+91 98765 43210",
+      amount: "₹320",
+      distance: "2.3 km",
+      eta: "15 mins",
+      status: "pickup_ready",
+      priority: "high",
     },
     {
-      id: '#ZOM002',
-      restaurant: 'Pizza Hut',
-      restaurantAddress: 'Karol Bagh, New Delhi',
-      customer: 'Priya Singh',
-      customerAddress: 'B-101, Rajouri Garden, New Delhi',
-      phone: '+91 87654 32109',
-      amount: '₹450',
-      distance: '3.8 km',
-      eta: '25 mins',
-      status: 'preparing',
-      priority: 'normal'
-    }
+      id: "#ZOM002",
+      restaurant: "Pizza Hut",
+      restaurantAddress: "Karol Bagh, New Delhi",
+      customer: "Priya Singh",
+      customerAddress: "B-101, Rajouri Garden, New Delhi",
+      phone: "+91 87654 32109",
+      amount: "₹450",
+      distance: "3.8 km",
+      eta: "25 mins",
+      status: "preparing",
+      priority: "normal",
+    },
   ]);
 
   const todayStats = {
@@ -500,32 +507,40 @@ const DeliveryDashboard: React.FC = () => {
     earnings: 850,
     distance: 45.2,
     rating: 4.8,
-    onTimeDeliveries: 11
+    onTimeDeliveries: 11,
   };
 
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState("orders");
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50 w-[100%]">
       {/* Header */}
-      <header className="bg-gradient-to-r from-red-600 to-red-500 text-white shadow-lg">
-        <div className="px-6 py-4">
+      <header className="bg-gradient-to-r from-orange-500 to-orange-400 text-white shadow-lg rounded-xl">
+        <div className="px-6 py-8">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                <Package className="w-6 h-6 text-red-600" />
-              </div>
+            <div className="flex items-center gap-5">
+              
               <div>
-                <h1 className="text-xl font-bold">Delivery Partner</h1>
-                <p className="text-red-100 text-sm">Foodify Dashboard</p>
+                <h1 className="text-5xl font-bold tracking-wide leading-tight">
+                  Delivery Partner
+                </h1>
+                <p className="text-2xl font-bold text-orange-100">
+                  Foodify Dashboard
+                </p>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4">
+
+            <div className="flex items-center gap-5">
               {/* Online/Offline Toggle */}
-              <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-lg">
-                <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
-                <span className="text-sm font-medium">{isOnline ? 'Online' : 'Offline'}</span>
+              <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl">
+                <div
+                  className={`w-3 h-3 rounded-full ${
+                    isOnline ? "bg-green-400 animate-pulse" : "bg-gray-400"
+                  }`}
+                ></div>
+                <span className="text-lg font-semibold">
+                  {isOnline ? "Online" : "Offline"}
+                </span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -533,18 +548,18 @@ const DeliveryDashboard: React.FC = () => {
                     checked={isOnline}
                     onChange={() => setIsOnline((prev) => !prev)}
                   />
-                  <div className="w-11 h-6 bg-white/20 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                  <div className="w-12 h-6 bg-white/20 rounded-full peer peer-checked:bg-green-500 after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
                 </label>
               </div>
-              
+
               {/* Profile */}
-              <div className="flex items-center gap-2 text-white">
-                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                  <User className="w-4 h-4" />
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
+                  <User className="w-7 h-7" />
                 </div>
                 <div className="text-left hidden md:block">
-                  <p className="text-sm font-medium">Mohit Kumar</p>
-                  <p className="text-xs text-red-100">Partner ID: ZOM123</p>
+                  <p className="text-2xl font-bold">Mohit Kumar</p>
+                  <p className="text-sm text-orange-100">Partner ID: ZOM123</p>
                 </div>
               </div>
             </div>
@@ -552,134 +567,180 @@ const DeliveryDashboard: React.FC = () => {
         </div>
       </header>
 
-      <div className="p-6 max-w-7xl mx-auto">
+      <div className=" mx-auto">
         {/* Welcome Section */}
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome back, Mohit! 👋</h2>
-          <p className="text-gray-600">Ready to deliver some happiness today?</p>
+        <div className="mb-8">
+          <h2 className="text-4xl font-bold text-gray-800 mb-3 py-6">
+            Welcome back, Mohit! 👋
+          </h2>
+          <p className="text-xl text-gray-600">
+            Ready to deliver some happiness today?
+          </p>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           {/* Today's Orders Card */}
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-4 shadow-lg">
+          <div className="bg-gradient-to-br from-orange-400 to-orange-300 text-white rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Today's Orders</p>
-                <p className="text-2xl font-bold">{todayStats.deliveries}</p>
+                <p className="text-orange-50 text-lg font-medium">
+                  Today's Orders
+                </p>
+                <p className="text-3xl font-bold">{todayStats.deliveries}</p>
               </div>
-              <Package className="w-8 h-8 text-blue-200" />
+              <Package className="w-10 h-10 text-orange-100" />
             </div>
           </div>
 
           {/* Earnings Card */}
-          <div className="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-4 shadow-lg">
+          <div className="bg-gradient-to-br from-orange-400 to-orange-300 text-white rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-100 text-sm font-medium">Earnings</p>
-                <p className="text-2xl font-bold">₹{todayStats.earnings}</p>
+                <p className="text-orange-50 text-lg font-medium">Earnings</p>
+                <p className="text-3xl font-bold">₹{todayStats.earnings}</p>
               </div>
-              <TrendingUp className="w-8 h-8 text-green-200" />
+              <TrendingUp className="w-10 h-10 text-orange-100" />
             </div>
           </div>
 
-
-
           {/* Rating Card */}
-          <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-4 shadow-lg">
+          <div className="bg-gradient-to-br from-orange-400 to-orange-300 text-white rounded-2xl p-6 shadow-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-100 text-sm font-medium">Rating</p>
-                <p className="text-2xl font-bold">{todayStats.rating}</p>
+                <p className="text-orange-50 text-lg font-medium">Rating</p>
+                <p className="text-3xl font-bold">{todayStats.rating}</p>
               </div>
-              <Star className="w-8 h-8 text-orange-200" />
+              <Star className="w-10 h-10 text-orange-100" />
             </div>
           </div>
 
           {/* On Time Card */}
-
         </div>
 
         {/* Tabs */}
         <div className="space-y-6">
-          <div className="inline-flex rounded-lg shadow-sm bg-white p-1" role="group">
-            <button
-              type="button"
-              className={`px-6 py-2 text-sm font-medium rounded-md transition-all ${activeTab === 'orders' ? 'bg-red-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100'}`}
-              onClick={() => setActiveTab('orders')}
+          <div className="flex my-6">
+            <div
+              className="inline-flex rounded-xl shadow-lg bg-white p-2"
+              role="group"
             >
-              Active Orders
-            </button>
+              <button
+                type="button"
+                className={`px-10 py-4 text-xl font-semibold rounded-lg transition-all ${
+                  activeTab === "orders"
+                    ? "bg-gray-700 text-white shadow-md"
+                    : "text-gray-700 hover:bg-orange-100"
+                }`}
+                onClick={() => setActiveTab("orders")}
+              >
+                Active Orders
+              </button>
+            </div>
           </div>
 
           {/* Orders Tab */}
-          {activeTab === 'orders' && (
+          {activeTab === "orders" && (
             <div className="space-y-4">
-              <div className="bg-white rounded-xl shadow-lg border border-gray-100">
-                <div className="px-6 py-4 border-b border-gray-100">
-                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800">
-                    <Package className="w-5 h-5 text-gray-600" />
+              <div className="bg-orange-50 rounded-xl shadow-lg border border-orange-100">
+                <div className="px-6 py-5 border-b border-orange-100">
+                  <h3 className="flex items-center gap-2 text-xl font-bold text-gray-800">
+                    <Package className="w-6 h-6 text-orange-600" />
                     Active Deliveries ({activeOrders.length})
                   </h3>
                 </div>
+
                 <div className="p-6 space-y-4">
                   {activeOrders.map((order) => (
-                    <div key={order.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50 hover:bg-white hover:shadow-md transition-all duration-200">
-                      <div className="flex justify-between items-start mb-3">
+                    <div
+                      key={order.id}
+                      className="border border-orange-200 rounded-xl p-5 bg-orange-100 hover:bg-orange-50 hover:shadow-md transition-all duration-200"
+                    >
+                      <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center gap-2">
-                          <span className={`px-3 py-1 text-xs font-medium rounded-full ${order.priority === 'high' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'}`}>
+                          <span
+                            className={`px-3 py-1 text-sm font-semibold rounded-full ${
+                              order.priority === "high"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-orange-200 text-orange-700"
+                            }`}
+                          >
                             {order.id}
                           </span>
-                          <span className={`px-3 py-1 text-xs font-medium rounded-full ${order.status === 'pickup_ready' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                            {order.status === 'pickup_ready' ? 'Ready for Pickup' : 'Preparing'}
+                          <span
+                            className={`px-3 py-1 text-sm font-semibold rounded-full ${
+                              order.status === "pickup_ready"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}
+                          >
+                            {order.status === "pickup_ready"
+                              ? "Ready for Pickup"
+                              : "Preparing"}
                           </span>
                         </div>
-                        <span className="font-bold text-green-600 text-lg">{order.amount}</span>
+                        <span className="font-bold text-green-700 text-xl">
+                          {order.amount}
+                        </span>
                       </div>
 
                       <div className="grid md:grid-cols-2 gap-4 mb-4">
                         <div className="space-y-2">
                           <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 text-red-500 mt-1 flex-shrink-0" />
+                            <MapPin className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="font-semibold text-sm text-gray-800">{order.restaurant}</p>
-                              <p className="text-gray-600 text-xs">{order.restaurantAddress}</p>
+                              <p className="font-semibold text-base text-gray-800">
+                                {order.restaurant}
+                              </p>
+                              <p className="text-gray-700 text-sm">
+                                {order.restaurantAddress}
+                              </p>
                             </div>
                           </div>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex items-start gap-2">
-                            <MapPin className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                            <MapPin className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                             <div>
-                              <p className="font-semibold text-sm text-gray-800">{order.customer}</p>
-                              <p className="text-gray-600 text-xs">{order.customerAddress}</p>
+                              <p className="font-semibold text-base text-gray-800">
+                                {order.customer}
+                              </p>
+                              <p className="text-gray-700 text-sm">
+                                {order.customerAddress}
+                              </p>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center gap-4 text-base text-gray-700">
                           <span className="flex items-center gap-1 font-medium">
-                            <Navigation className="w-4 h-4" />
+                            <Navigation className="w-5 h-5" />
                             {order.distance}
                           </span>
                           <span className="flex items-center gap-1 font-medium">
-                            <Clock className="w-4 h-4" />
+                            <Clock className="w-5 h-5" />
                             {order.eta}
                           </span>
                         </div>
 
                         <div className="flex gap-2">
-                          <button className="flex items-center gap-1 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                            <Phone className="w-4 h-4" />
+                          <button className="flex items-center gap-1 px-5 py-2 text-base font-medium border border-gray-300 rounded-lg hover:bg-orange-200 transition-colors">
+                            <Phone className="w-5 h-5" />
                             Call
                           </button>
-                          <button 
-                            className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors ${order.status === 'pickup_ready' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                          <button
+                            className={`px-5 py-2 text-base font-medium text-white rounded-lg transition-colors ${
+                              order.status === "pickup_ready"
+                                ? "bg-green-600 hover:bg-green-700"
+                                : "bg-orange-600 hover:bg-orange-700"
+                            }`}
                           >
-                            {order.status === 'pickup_ready' ? 'Start Delivery' : 'Track Order'}
+                            {order.status === "pickup_ready"
+                              ? "Start Delivery"
+                              : "Track Order"}
                           </button>
                         </div>
                       </div>

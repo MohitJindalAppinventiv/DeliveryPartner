@@ -13,7 +13,9 @@ import {
   ChefHat,
   IndianRupee,
 } from "lucide-react";
-import { logout } from "../../store/authSlice";
+// import { logout } from "../../store/authSlice";
+import { logoutUser } from "../../store/authSlice";
+import { toast } from "react-toastify";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 interface SidebarProps {
   mobileOpen: boolean;
@@ -115,9 +117,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
                           : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     />
-                    <span className="ml-4 font-medium">
-                      {item.name}
-                    </span>
+                    <span className="ml-4 font-medium">{item.name}</span>
                     {isActive(item.path) && (
                       <div className="ml-auto w-2 h-2 bg-white rounded-full opacity-80" />
                     )}
@@ -130,10 +130,11 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
           {/* Logout Section */}
           <div className="p-4 border-t border-gray-200/70">
             <button
-            onClick={()=>{
-              dispatch(logout());
-              navigate('/login')
-            }}
+              onClick={async () => {
+                await dispatch(logoutUser());
+                toast.success("Logged out successfully!");
+                navigate("/login");
+              }}
               className="group flex items-center w-full p-4 rounded-2xl hover:bg-gradient-to-br hover:from-red-50 hover:to-pink-50 hover:scale-105 transition-all"
             >
               <LogOut className="h-5 w-5 text-gray-600 group-hover:text-red-600" />

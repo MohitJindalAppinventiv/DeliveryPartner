@@ -423,7 +423,6 @@
 
 // export default EarningsPage;
 
-
 // import React, { useEffect, useState } from "react";
 // import { useAppDispatch, useAppSelector } from "../../hooks/useAppDispatch";
 // import { getEarnings } from "../../store/earningSlice";
@@ -464,7 +463,51 @@
 
 // export default EarningStats;
 
+// import React, { useEffect } from "react";
+// import { useAppDispatch, useAppSelector } from "../../hooks/useAppDispatch";
+// import { getAllEarnings } from "../../store/earningSlice";
+// import type { PeriodType } from "../../types/earningTypes";
 
+// const periodTitles: Record<PeriodType, string> = {
+//   daily: "💰 Daily Earnings",
+//   weekly: "📆 Weekly Earnings",
+//   monthly: "📅 Monthly Earnings",
+//   yearly: "📈 Yearly Earnings",
+// };
+
+// const EarningCards = () => {
+//   const dispatch = useAppDispatch();
+//   const { data, loading, error } = useAppSelector((state) => state.earnings);
+
+//   useEffect(() => {
+//     dispatch(getAllEarnings());
+//   }, [dispatch]);
+
+//   if (loading) return <p>Loading earnings...</p>;
+//   if (error) return <p>Error: {error}</p>;
+
+//   return (
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+//       {(["daily", "weekly", "monthly", "yearly"] as PeriodType[]).map((period) => {
+//         const earning = data[period];
+//         return (
+//           <div key={period} className="rounded-xl shadow-md p-4 bg-white border">
+//             <h3 className="text-lg font-semibold">{periodTitles[period]}</h3>
+//             {earning ? (
+//               <p className="text-xl mt-2">
+//                 {earning.currency} {earning.earnings}
+//               </p>
+//             ) : (
+//               <p>No data</p>
+//             )}
+//           </div>
+//         );
+//       })}
+//     </div>
+//   );
+// };
+
+// export default EarningCards;
 
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks/useAppDispatch";
@@ -478,6 +521,20 @@ const periodTitles: Record<PeriodType, string> = {
   yearly: "📈 Yearly Earnings",
 };
 
+const periodIcons: Record<PeriodType, string> = {
+  daily: "💰",
+  weekly: "📆",
+  monthly: "📅",
+  yearly: "📈",
+};
+
+const periodColors: Record<PeriodType, string> = {
+  daily: "from-orange-400 to-orange-300",
+  weekly: "from-orange-500 to-orange-400",
+  monthly: "from-orange-600 to-orange-500",
+  yearly: "from-orange-700 to-orange-600",
+};
+
 const EarningCards = () => {
   const dispatch = useAppDispatch();
   const { data, loading, error } = useAppSelector((state) => state.earnings);
@@ -486,29 +543,134 @@ const EarningCards = () => {
     dispatch(getAllEarnings());
   }, [dispatch]);
 
-  if (loading) return <p>Loading earnings...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="flex items-center gap-3 bg-orange-50 px-6 py-4 rounded-xl border border-orange-200">
+          <div className="w-6 h-6 border-3 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-orange-700 font-medium text-lg">
+            Loading earnings...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="bg-red-50 border border-red-200 rounded-xl px-6 py-4">
+          <p className="text-red-700 font-medium text-lg">Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-      {(["daily", "weekly", "monthly", "yearly"] as PeriodType[]).map((period) => {
-        const earning = data[period];
-        return (
-          <div key={period} className="rounded-xl shadow-md p-4 bg-white border">
-            <h3 className="text-lg font-semibold">{periodTitles[period]}</h3>
-            {earning ? (
-              <p className="text-xl mt-2">
-                {earning.currency} {earning.earnings}
-              </p>
-            ) : (
-              <p>No data</p>
-            )}
-          </div>
-        );
-      })}
+    <div className="bg-gray-50 p-6">
+      <div className="mb-6">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          💼 Earnings Overview
+        </h2>
+        <p className="text-gray-600 text-lg">
+          Track your performance across different time periods
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {(["daily", "weekly", "monthly", "yearly"] as PeriodType[]).map(
+          (period) => {
+            const earning = data[period];
+            return (
+              <div
+                key={period}
+                className="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-100 hover:border-orange-200 overflow-hidden"
+              >
+                {/* Header with gradient */}
+                <div className={`bg-gradient-to-r ${periodColors[period]} p-4`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-white">
+                      <h3 className="text-lg font-bold">
+                        {periodTitles[period].replace(/[💰📆📅📈]\s/, "")}
+                      </h3>
+                      <p className="text-orange-100 text-sm font-medium">
+                        Performance
+                      </p>
+                    </div>
+                    <div className="text-3xl bg-white/20 p-3 rounded-xl">
+                      {periodIcons[period]}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 bg-orange-50/30">
+                  {earning ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">
+                          Total Amount
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm text-orange-600 font-medium">
+                            {earning.currency}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-3xl font-bold text-gray-800">
+                        {earning.earnings.toLocaleString()}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="text-green-600 font-medium">
+                          Active Period
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-4">
+                      <div className="text-4xl mb-2">📊</div>
+                      <p className="text-gray-500 font-medium">
+                        No data available
+                      </p>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Start earning to see statistics
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Footer */}
+                <div className="px-6 py-3 bg-white border-t border-orange-100">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">
+                      {period.charAt(0).toUpperCase() + period.slice(1)} view
+                    </span>
+                    <div className="flex items-center gap-1 text-orange-600 font-medium group-hover:text-orange-700 transition-colors">
+                      <span>View details</span>
+                      <svg
+                        className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+        )}
+      </div>
     </div>
   );
 };
 
 export default EarningCards;
-
