@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { setCredentials } from "./store/authSlice";
+import { setCredentials } from "./store/slices/authSlice";
 import RouteRenderer from "./routes/RouteRenderer";
-
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useDispatch();
@@ -15,7 +15,21 @@ function App() {
   });
 
   return (
-    <RouteRenderer />
+    <>
+      <RouteRenderer />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="dark"
+        transition={Bounce}
+      />{" "}
+    </>
   );
 }
 

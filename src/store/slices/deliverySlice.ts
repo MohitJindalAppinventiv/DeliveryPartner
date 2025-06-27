@@ -1,23 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { Delivery, PaginatedDeliveries } from "../types/deliveryTypes";
-import { fetchDeliveries } from "../api/orderHistoryApi";;
+import type { Delivery, PaginatedDeliveries } from "../../types/deliveryTypes";
+import { fetchDeliveries } from "../../api/orderHistoryApi";;
 
 interface DeliveryState {
   deliveries: Delivery[];
   loading: boolean;
   error: string | null;
-  total: number;
-  page: number;
-  limit: number;
+  totalCount: number;
 }
 
 const initialState: DeliveryState = {
   deliveries: [],
   loading: false,
   error: null,
-  total: 0,
-  page: 1,
-  limit: 10,
+  totalCount: 0,
 };
 
 export const getDeliveries = createAsyncThunk(
@@ -27,6 +23,7 @@ export const getDeliveries = createAsyncThunk(
     return data;
   }
 );
+
 
 const deliverySlice = createSlice({
   name: "delivery",
@@ -41,9 +38,7 @@ const deliverySlice = createSlice({
       .addCase(getDeliveries.fulfilled, (state, action) => {
         state.loading = false;
         state.deliveries = action.payload.data;
-        state.total = action.payload.total;
-        state.page = action.payload.page;
-        state.limit = action.payload.limit;
+        state.totalCount = action.payload.total;
       })
       .addCase(getDeliveries.rejected, (state, action) => {
         state.loading = false;

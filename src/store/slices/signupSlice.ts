@@ -1,5 +1,5 @@
 
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface PersonalInfo {
   name: string;
@@ -43,7 +43,7 @@ const initialState: SignupState = {
   personalInfo: {
     name: '',
     email: '',
-    mobile: '', // Added mobile field
+    mobile: '', 
     dob: '',
     password: '',
     confirmPassword: '',
@@ -64,6 +64,7 @@ const initialState: SignupState = {
   },
 };
 
+
 const signupSlice = createSlice({
   name: 'signup',
   initialState,
@@ -74,7 +75,10 @@ const signupSlice = createSlice({
     nextStep: (state) => {
       state.step += 1;
     },
-    prevStep: (state) => {
+    prevStep: (state,action) => {
+      if(action.payload && state.step==3){
+        state.step-=2;
+      }
       if (state.step > 1) {
         state.step -= 1;
       }

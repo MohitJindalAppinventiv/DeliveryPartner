@@ -1,5 +1,3 @@
-// utils/authStorage.ts
-
 const AUTH_TOKEN_KEY = "authToken";
 
 export const saveAuthToken = (token: string) => {

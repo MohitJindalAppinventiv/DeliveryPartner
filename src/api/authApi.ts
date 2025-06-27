@@ -1,77 +1,24 @@
-// import axiosInstance from './axiosInstance'; // adjust the path if needed
 
-// // Forgot Password → Step 1: Request OTP (sends OTP + returns auth token)
-// export const requestOtp = async (email: string) => {
-//   const res = await axiosInstance.post('/auth/delivery-partner/forgot-password', { email });
-//   console.log("requesting OTP");
-//   console.log("Otp requesting token",res.data);
-//   return res.data; // { token: string }
-// };
-
-// // Step 2: Verify OTP (auth token in headers → returns access token)
-// export const verifyOtp = async (data: { otp: string; token: string }) => {
-//   console.log("data",data);
-//   const res = await axiosInstance.post(
-//     '/auth/delivery-partner/verify-otp',
-//     { otp: data.otp },
-//     {
-//       headers: {
-//         Authorization: `Bearer ${data.token}`,
-//       },
-//     }
-//   );
-//   console.log("verify otp token",res.data);
-//   return res.data; // { accessToken: string }
-// };
-
-// // Step 2: Resend OTP (auth token in headers)
-// export const resendOtp = async () => {
-//   const token=localStorage.getItem('forget-token');
-//   const res = await axiosInstance.post(
-//     '/authDeliveryPartner/resendOtp',
-//     {},
-//     {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     }
-//   );
-
-//   console.log("resend otp token",res.data);
-  
-//   return res.data;
-// };
-
-// // Step 3: Reset Password (access token in headers)
-// export const resetPassword = async (data: { password: string; accessToken: string }) => {
-//   const res = await axiosInstance.patch(
-//     'auth/delivery-partner/update-password',
-
-//     { password: data.password },
-//     {
-//       headers: {
-//         Authorization: `Bearer ${data.accessToken}`,
-//       },
-//     }
-//   );
-//   return res.data;
-// };
-
+import axios from 'axios';
 import axiosInstance from './axiosInstance';
+import ENDPOINTS from './Endpoints';
 
-// Forgot Password → Step 1: Request OTP (sends OTP + returns auth token)
+
+const apiUrl=import.meta.env.VITE_API_URL;
+// API to Request OTP
 export const requestOtp = async (email: string) => {
-  const res = await axiosInstance.post('/auth/deliveryPartner/forgotPassword', { email });
+  const res = await axiosInstance.post(`${ENDPOINTS.FORGOT_PASSWORD}`, { email });
   console.log("requesting OTP");
   console.log("Otp requesting token", res.data);
-  return res.data; // Should return { token: string } or { accessToken: string }
+  return res.data; 
 };
 
-// Step 2: Verify OTP (auth token in headers → returns access token)
+// API to Verify OTP
+// It will be called after verifyOtp
 export const verifyOtp = async (data: { otp: string; token: string }) => {
   console.log("data", data);
   const res = await axiosInstance.post(
-    '/auth/deliveryPartner/verifyOtp',
+    `${ENDPOINTS.VERIFY_OTP}`,
     { otp: data.otp },
     {
       headers: {
@@ -80,13 +27,30 @@ export const verifyOtp = async (data: { otp: string; token: string }) => {
     }
   );
   console.log("verify otp token", res.data);
-  return res.data; // Should return { accessToken: string }
+  return res.data;
 };
 
-// Step 2: Resend OTP (auth token in headers)
+// API for check verify Otp for SignUp
+export const verifyOtpEmail = async (data: { otp: string; token: string }) => {
+  const emailToken=localStorage.getItem('email-token')
+  console.log("data", data);
+  const res = await axios.post(
+    `${apiUrl}${ENDPOINTS.VERIFY_OTP}`,
+    { otp: data.otp },
+    {
+      headers: {
+        Authorization: `Bearer ${emailToken}`,
+      },
+    }
+  );
+  console.log("verify otp token", res);
+  return res.data;
+};
+
+// API for resending the OTP
 export const resendOtp = async (token: string) => {
   const res = await axiosInstance.post(
-    '/auth/deliveryPartner/resendOtp', // Fixed endpoint to match pattern
+    `${ENDPOINTS.RESEND_OTP}`, 
     {},
     {
       headers: {
@@ -100,10 +64,10 @@ export const resendOtp = async (token: string) => {
   return res.data;
 };
 
-// Step 3: Reset Password (access token in headers)
+//  Reset Password (access token in headers)
 export const resetPassword = async (data: { password: string; accessToken: string }) => {
   const res = await axiosInstance.patch(
-    '/auth/deliveryPartner/updatePassword', // Added leading slash
+    `${ENDPOINTS.UPDATE_PASSWORD}`, 
     { "newPassword": data.password },
     {
       headers: {
@@ -116,7 +80,6 @@ export const resetPassword = async (data: { password: string; accessToken: strin
 
 
 
-// Clean interfaces without unwanted fields
 export interface VehicleDetails {
   vehicleType: string;
   vehicleNumber: string;
@@ -130,7 +93,7 @@ export interface Documents {
 }
 
 export interface DeliveryPartner {
-  id: string; // transformed from _id
+  id: string; 
   name: string;
   email: string;
   mobileNumber: string;
@@ -146,7 +109,6 @@ export interface DeliveryPartner {
   isActive: boolean;
 }
 
-// Raw API response interface (what comes from backend)
 interface RawDeliveryPartner {
   _id: string;
   name: string;
@@ -177,7 +139,6 @@ interface RawDeliveryPartner {
   __v: number;
 }
 
-// Transform function to clean the data
 const transformDeliveryPartner = (raw: RawDeliveryPartner): DeliveryPartner => {
   return {
     id: raw._id,
@@ -205,19 +166,10 @@ const transformDeliveryPartner = (raw: RawDeliveryPartner): DeliveryPartner => {
   };
 };
 
-// export const fetchDeliveryPartners = async (): Promise<DeliveryPartner[]> => {
-//   const response = await axiosInstance.get('/api/delivery-partners');
-//   // Transform the raw data to clean format
-//   return response.data.map(transformDeliveryPartner);
-// };
 
 export const fetchDeliveryPartner = async (): Promise<DeliveryPartner> => {
   const data=localStorage.getItem('accessToken');
-  const response = await axiosInstance.get(`/deliveryPartners/getProfile`,{
-      headers: {
-        Authorization: `Bearer ${data}`,
-      },
-    });
-  console.log('deliveryPartner',response)
+  const response = await axiosInstance.get(`${ENDPOINTS.GET_PROFILE}`);
+  // console.log('deliveryPartner',response)
   return transformDeliveryPartner(response.data);
 };
