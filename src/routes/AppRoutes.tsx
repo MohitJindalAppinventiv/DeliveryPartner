@@ -1,24 +1,48 @@
-import Login from "../pages/login/Login";
-import Dashboard from "../pages/dashboard/Dashboard";
-import NotFound from "../pages/not-found/NotFound";
-import Profile from "../pages/profile/Profile";
-import SignUp from "../pages/signup/SignUp";
-import DeliveryPartner from "../pages/Landing/DeliveryPartner";
+import { lazy, Suspense } from "react";
 
 import PublicRoute from "../components/auth/PublicRoute";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
-import EarningsPage from "../pages/earning/Earning";
-import DashboardLayout from "../layout/DashboardLayout";
-import OrderHistory from "../pages/order-history/OrderHistory";
-import Notification from "../pages/notification/Notification";
-import ForgotPasswordPage from "../pages/forgot-password/ForgotPassword";
+import CalendarComponent from "../pages/calendar/CalendarComponent";
+
+
+
+const Review=lazy(()=>import("../pages/review/Review"));
+// lazy loading
+const Login = lazy(() => import("../pages/login/Login"));
+// import Login from "../pages/login/Login";
+const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+// import Dashboard from "../pages/dashboard/Dashboard";
+const NotFound = lazy(() => import("../pages/not-found/NotFound"));
+// import NotFound from "../pages/not-found/NotFound";
+const Profile = lazy(() => import("../pages/profile/Profile"));
+// import Profile from "../pages/profile/Profile";
+const SignUp = lazy(() => import("../pages/signup/SignUp"));
+// import SignUp from "../pages/signup/SignUp";
+const DeliveryPartner = lazy(() => import("../pages/Landing/DeliveryPartner"));
+// import DeliveryPartner from "../pages/Landing/DeliveryPartner";
+const EarningsPage = lazy(() => import("../pages/earning/Earning"));
+// import EarningsPage from "../pages/earning/Earning";
+const DashboardLayout = lazy(() => import("../layout/DashboardLayout"));
+// import DashboardLayout from "../layout/DashboardLayout";
+const OrderHistory = lazy(() => import("../pages/order-history/OrderHistory"));
+// import OrderHistory from "../pages/order-history/OrderHistory";
+const Notification = lazy(() => import("../pages/notification/Notification"));
+// import Notification from "../pages/notification/Notification";
+const ForgotPasswordPage = lazy(
+  () => import("../pages/forgot-password/ForgotPassword")
+);
+// import ForgotPasswordPage from "../pages/forgot-password/ForgotPassword";
+const LoadingScreen = lazy(() => import("../components/common/LoadingScreen"));
+
 
 const routes = [
   {
     path: "/",
     element: (
       <PublicRoute>
-        <DeliveryPartner />
+        <Suspense fallback={<LoadingScreen />}>
+          <DeliveryPartner />
+        </Suspense>
       </PublicRoute>
     ),
   },
@@ -26,7 +50,9 @@ const routes = [
     path: "/login",
     element: (
       <PublicRoute>
-        <Login />
+        <Suspense fallback={<LoadingScreen />}>
+          <Login />
+        </Suspense>
       </PublicRoute>
     ),
   },
@@ -34,50 +60,97 @@ const routes = [
     path: "/signup",
     element: (
       <PublicRoute>
-        <SignUp />
+        <Suspense fallback={<LoadingScreen />}>
+          <SignUp />
+        </Suspense>
       </PublicRoute>
     ),
   },
   {
-    path:'/forgot-password',
-    element:<ForgotPasswordPage/>
+    path: "/forgot-password",
+    element: (
+      <Suspense fallback={<LoadingScreen />}>
+        <ForgotPasswordPage />
+      </Suspense>
+    ),
   },
 
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <DashboardLayout />
+        <Suspense fallback={<LoadingScreen />}>
+          <DashboardLayout />
+        </Suspense>
       </ProtectedRoute>
     ),
     children: [
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <Dashboard />
+          </Suspense>
+        ),
       },
       {
         path: "profile",
-        element: <Profile />,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <Profile />
+          </Suspense>
+        ),
       },
       {
         path: "earnings",
-        element: <EarningsPage />,
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <EarningsPage />
+          </Suspense>
+        ),
       },
       {
-        path:"order-history",
-        element:<OrderHistory/>
+        path: "order-history",
+        element: (
+          <Suspense fallback={<LoadingScreen />}>
+            <OrderHistory />
+          </Suspense>
+        ),
       },
       {
-        path:'notifications',
-        element:<Notification/>
-      }      
+        path: "notifications",
+        element: (
+          <Suspense fallback={<LoadingScreen/>}>
+            <Notification />
+          </Suspense>
+      ),
+      },
+      {
+        path:"reviews",
+        element:(
+          <Suspense fallback={<LoadingScreen/>}>
+            <Review/>
+          </Suspense>
+        )
+      },
+      {
+        path:"calendar",
+        element:(
+          <Suspense fallback={<LoadingScreen/>}>
+            <CalendarComponent/>
+          </Suspense>
+        )
+      }
     ],
   },
   {
-    path:"*",
-    element:<NotFound/>
-  }
-
+    path: "*",
+    element: (
+      <Suspense fallback={<LoadingScreen />}>
+        <NotFound />
+      </Suspense>
+    ),
+  },
 ];
 
 export default routes;

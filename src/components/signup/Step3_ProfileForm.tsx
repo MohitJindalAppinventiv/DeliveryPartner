@@ -1,59 +1,27 @@
-import { useForm } from "react-hook-form";
+import { useForm,useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updatePersonalInfo,
-  updateVehicleDetails,
-  updateDocuments,
-} from "../../store/signupSlice";
-import { useWatch } from "react-hook-form";
+import {  updatePersonalInfo,  updateVehicleDetails,  updateDocuments,  resetSignup,
+} from "../../store/slices/signupSlice";
 import { type RootState } from "../../store/store";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
-
+import { ToastError, ToastSuccess } from "../../utils/toast";
+import axios from "axios";
+import ENDPOINTS from "../../api/Endpoints";
+import { motion } from "framer-motion";
 // List of Indian states for dropdown
-const indianStates = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Delhi",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-];
-const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+const indianStates = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar", "Chhattisgarh","Delhi","Goa", "Gujarat", "Haryana", "Himachal Pradesh","Jharkhand","Karnataka",  "Kerala", "Madhya Pradesh","Maharashtra","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Uttar Pradesh","Uttarakhand","West Bengal",];
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const mobileRegex = /^[6-9]\d{9}$/;
 
-// Define schema using Zod
+// zod schema
 const formSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
-    mobile: z
-      .string()
-      .regex(
-        mobileRegex,
-        "Mobile number must be a valid 10-digit Indian number"
-      ),
+    mobile: z.string().regex(mobileRegex,"Mobile number must be a valid 10-digit Indian number"),
     dob: z.string().refine(
       (val) => {
         const dob = new Date(val);
@@ -61,28 +29,18 @@ const formSchema = z
         const ageDiff = today.getFullYear() - dob.getFullYear();
         const m = today.getMonth() - dob.getMonth();
         const dayDiff = today.getDate() - dob.getDate();
-
-        const isAtLeast18 =
-          ageDiff > 18 ||
-          (ageDiff === 18 && (m > 0 || (m === 0 && dayDiff >= 0)));
+        const isAtLeast18 =ageDiff > 18 || (ageDiff === 18 && (m > 0 || (m === 0 && dayDiff >= 0)));
         return isAtLeast18;
       },
       {
         message: "You must be at least 18 years old.",
       }
     ),
-    password: z
-      .string()
-      .regex(
-        passwordRegex,
-        "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"
-      ),
+    password: z.string().regex(passwordRegex,"Password must be at least 8 characters long and include uppercase, lowercase, number, and special character"),
     confirmPassword: z.string(),
-    permanentAddress: z
-      .string()
-      .min(5, "Address must be at least 5 characters"),
+    permanentAddress: z.string().min(5, "Address must be at least 5 characters"),
     pincode: z.string().regex(/^\d{6}$/, "Pincode must be 6 digits"),
-    state: z.enum(indianStates as [string, ...string[]], {
+    state: z.enum(indianStates as [string,...string[]], {
       errorMap: () => ({ message: "Please select a state" }),
     }),
     vehicleType: z.enum(["SCOOTER", "BIKE", "BICYCLE"], {
@@ -132,8 +90,8 @@ export default function Step3ProfileForm() {
 
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });
-  const mobile = useWatch({ control, name: "mobile" }); // Watch mobile field
-  const dob = useWatch({ control, name: "dob" }); // Watch dob field
+  const mobile = useWatch({ control, name: "mobile" });
+  const dob = useWatch({ control, name: "dob" });
 
   const passwordsMatch = password === confirmPassword;
   const isStrongPassword = passwordRegex.test(password || "");
@@ -162,13 +120,10 @@ export default function Step3ProfileForm() {
     const payload = {
       // top-level fields
       name: data.name.trim(),
-      email,
       mobileNumber: `+91${data.mobile}`,
       password: data.password,
       dob: data.dob,
       permanentAddress: data.permanentAddress,
-
-      // nested vehicle block
       vehicleDetails:
         data.vehicleType === "BICYCLE"
           ? { vehicleType: "BICYCLE" }
@@ -177,8 +132,6 @@ export default function Step3ProfileForm() {
               vehicleNumber: data.vehicleNumber,
               vehicleColor: data.vehicleColor ?? "",
             },
-
-      // nested documents block
       documents: {
         aadhaar: data.aadhaarNumber,
         ...(data.vehicleType !== "BICYCLE" && {
@@ -186,47 +139,42 @@ export default function Step3ProfileForm() {
           dl: data.dlNumber,
         }),
       },
-    } satisfies {
-      name: string;
-      email: string;
-      mobileNumber: string;
-      password: string;
-      dob: string;
-      permanentAddress: string;
-      vehicleDetails: {
-        vehicleType: "BIKE" | "SCOOTER" | "BICYCLE";
-        vehicleNumber?: string;
-        vehicleColor?: string;
-      };
-      documents: {
-        rc?: string;
-        aadhaar: string;
-        dl?: string;
-      };
     };
 
     try {
-      console.log(payload)
-      const response = await axiosInstance.post("/auth/deliveryPartner/register", payload, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      console.log(payload);
+      const token = localStorage.getItem("usersubmit");
+      console.log("submit", token);
+      const response = await axiosInstance.post(
+        `${ENDPOINTS.REGISTER}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      navigate("/login", {
-        state: {
-          message:
-            "Registration successful! Please login with your credentials.",
-          email: email,
-        },
-      });
+      ToastSuccess("User Registered Successfully");
+      dispatch(resetSignup());
+        navigate("/login", {
+          state: {
+            message:
+              "Registration successful! Please login with your credentials.",
+            email: email,
+          },
+        });
+;
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        ToastError("Bad Request! Please Enter all the Fields");
+      }
       console.error("Registration error:", error);
       throw error;
     }
   };
 
-  // Form submission handler
   const onSubmit = async (data: FormSchema) => {
     setIsSubmitting(true);
     setSubmitError("");
@@ -234,7 +182,6 @@ export default function Step3ProfileForm() {
     try {
       console.log("Starting registration...");
 
-      // Update Redux store
       dispatch(
         updatePersonalInfo({
           name: data.name,
@@ -248,7 +195,6 @@ export default function Step3ProfileForm() {
           state: data.state,
         })
       );
-
       dispatch(
         updateVehicleDetails({
           vehicleType: data.vehicleType,
@@ -257,7 +203,6 @@ export default function Step3ProfileForm() {
             data.vehicleType !== "BICYCLE" ? data.vehicleNumber : "",
         })
       );
-
       dispatch(
         updateDocuments({
           aadhaar: data.aadhaarNumber,
@@ -267,21 +212,22 @@ export default function Step3ProfileForm() {
         })
       );
 
-      // Make API call
       await submitRegistration(data);
     } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Registration failed. Please try again."
-      );
+      ToastError("Registration Failed. Please try again");
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center bg-gray-50">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen p-6 flex items-center justify-center bg-gray-50"
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-4xl space-y-8"
@@ -295,23 +241,12 @@ export default function Step3ProfileForm() {
           </p>
         </div>
 
-        {/* Error Message */}
-        {submitError && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-            <div className="flex items-center">{submitError}</div>
-          </div>
-        )}
-
         {/* Personal Info */}
         <section className="space-y-6">
-          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 flex items-center">
-            Personal Information
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 flex items-center">Personal Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block font-medium text-gray-700 mb-1">
-                Full Name *
-              </label>
+              <label className="block font-medium text-gray-700 mb-1">Full Name *</label>
               <input
                 {...register("name")}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
@@ -325,9 +260,7 @@ export default function Step3ProfileForm() {
             </div>
 
             <div>
-              <label className="block font-medium text-gray-700 mb-1">
-                Mobile Number *
-              </label>
+              <label className="block font-medium text-gray-700 mb-1">Mobile Number *</label>
               <input
                 {...register("mobile")}
                 type="tel"
@@ -661,6 +594,6 @@ export default function Step3ProfileForm() {
           <p>* Required fields</p>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }

@@ -34,5 +34,6 @@ export interface EarningData {
   period: PeriodType;
   earnings: number;
   currency: string;
+  deliveryCount:number;
 }
 

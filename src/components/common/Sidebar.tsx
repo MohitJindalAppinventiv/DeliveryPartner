@@ -12,8 +12,10 @@ import {
   Star,
   ChefHat,
   IndianRupee,
+  Stars,
+  Calendar,
 } from "lucide-react";
-import { logout } from "../../store/authSlice";
+import { logout, logoutUser } from "../../store/slices/authSlice";
 import { useAppDispatch } from "../../hooks/useAppDispatch";
 interface SidebarProps {
   mobileOpen: boolean;
@@ -35,11 +37,13 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
     { name: "Earnings", icon: IndianRupee, path: "/earnings" },
     { name: "Profile", icon: User, path: "/profile" },
     { name: "Notifications", icon: Bell, path: "/notifications" },
+    {name:"Reviews", icon:Stars,path:"/reviews"},
+    {name:"Calendar",icon:Calendar,path:"/calendar"}
   ];
 
   const isActive = (path: string) => location.pathname === path;
-  const dispatch=useAppDispatch();
-  const navigate=useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -115,9 +119,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
                           : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     />
-                    <span className="ml-4 font-medium">
-                      {item.name}
-                    </span>
+                    <span className="ml-4 font-medium">{item.name}</span>
                     {isActive(item.path) && (
                       <div className="ml-auto w-2 h-2 bg-white rounded-full opacity-80" />
                     )}
@@ -130,10 +132,10 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
           {/* Logout Section */}
           <div className="p-4 border-t border-gray-200/70">
             <button
-            onClick={()=>{
-              dispatch(logout());
-              navigate('/login')
-            }}
+              onClick={async () => {
+                await dispatch(logoutUser());
+                navigate("/login");
+              }}
               className="group flex items-center w-full p-4 rounded-2xl hover:bg-gradient-to-br hover:from-red-50 hover:to-pink-50 hover:scale-105 transition-all"
             >
               <LogOut className="h-5 w-5 text-gray-600 group-hover:text-red-600" />

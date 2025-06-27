@@ -1,6 +1,8 @@
+import { ToastContainer ,Bounce} from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppDispatch';
-import { requestOtp, selectForgot } from '../../store/forgotPasswordSlice';
+import { requestOtp, selectForgot } from '../../store/slices/forgotPasswordSlice';
 import { useState } from 'react';
+import { ToastError } from '../../utils/toast';
 
 export default function EmailStep() {
   const dispatch = useAppDispatch();
@@ -9,11 +11,15 @@ export default function EmailStep() {
 
   const submit = () => {
     if (!email) return;
+    if(error){
+      ToastError(error);
+      return;
+    } 
     dispatch(requestOtp(email));
   };
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-md mx-auto mt-10 p-8 rounded-lg shadow-lg bg-white">
       <div className="text-center">
         <h2 className="text-xl font-semibold text-gray-800">Forgot Password</h2>
         <p className="text-sm text-gray-600 mt-1">Enter your registered email</p>
@@ -37,6 +43,20 @@ export default function EmailStep() {
         {error && (
           <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
         )}
+
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="dark"
+        transition={Bounce}
+      />
 
         <button
           onClick={submit}
